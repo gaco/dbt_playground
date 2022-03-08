@@ -1,0 +1,52 @@
+version: 2
+
+models:
+
+  - name: meat_prices
+    columns:
+      - name: variable_name
+        tests:
+          - accepted_values:
+              values: ['Meat Price Index', 'Meat Price Index, deflated']
+      - name: frequency
+        tests:
+          - accepted_values:
+              values: ['annual', 'monthly']
+
+sources:
+
+  - name: raw_aggriculture
+    database: AGRICULTURE_DATA_ATLAS
+    schema: AGRICULTURE
+    tables:
+      - name: FAOFPI2020JUL
+        columns:
+        - name: '"Variable"'
+          tests:
+            - not_null
+        - name: '"Variable Name"'
+          tests: 
+            - not_null
+        - name: '"Variable Notes"'
+          tests:
+            - not_null
+        - name: '"Variable Unit"'
+          tests:
+            - not_null    
+        - name: '"Units"'
+          tests:
+            - not_null    
+        - name: '"Scale"'
+          tests:
+            - not_null    
+        - name: '"Frequency"'
+          tests:
+            - not_null
+            - accepted_values:
+                values: ['A', 'M']
+        - name: '"Value"'
+          tests:
+            - not_null    
+        - name: '"Date"'
+          tests:
+            - not_null

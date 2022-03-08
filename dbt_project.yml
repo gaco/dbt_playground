@@ -24,6 +24,9 @@ clean-targets:         # directories to be removed by `dbt clean`
   - "target"
   - "dbt_packages"
 
+on-run-start:
+  # table to store an auditing trail of dbt models runs.
+  "create table if not exists audit (model text, state text, time timestamp_ltz)"
 
 # Configuring models
 # Full documentation: https://docs.getdbt.com/docs/configuring-models
@@ -32,6 +35,8 @@ clean-targets:         # directories to be removed by `dbt clean`
 # as tables. These settings can be overridden in the individual model files
 # using the `{{ config(...) }}` macro.
 models:
+  +pre-hook: "insert into dbt.audit (model, state, time) values( '{{ this }}', 'model deployed started', current_timestamp )"
+  +post-hook: "insert into dbt.audit (model, state, time) values( '{{ this }}', 'model deployed finshed', current_timestamp )"
   dbt_playground:
     # Config indicated by + and applies to all files under models/example/
     example:
@@ -40,3 +45,6 @@ models:
       +materialized: incremental
     aggregations:
       +materialzed: table
+      +post-hook: 
+        - 'grant usage on schema {{ target.schema }} to role analyst'
+        - 'grant select on {{ this }} to role analyst'
