@@ -2,7 +2,7 @@ version: 2
 
 models:
 
-  - name: meat_prices
+  - name: stg_meat_prices
     columns:
       - name: variable_name
         tests:
@@ -13,6 +13,16 @@ models:
           - accepted_values:
               values: ['annual', 'monthly']
 
+  - name: stg_rice_prices
+    columns:
+      - name: variable_name
+        tests:
+          - accepted_values:
+              values: ['Rice Price Index', 'Rice Price Index, deflated']
+      - name: frequency
+        tests:
+          - accepted_values:
+              values: ['annual', 'monthly']
 sources:
 
   - name: raw_aggriculture
