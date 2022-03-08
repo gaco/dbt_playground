@@ -1,4 +1,4 @@
-{{ config(materialized='incremental', unique_key='date') }}
+{{ config(materialized='incremental', unique_key='date',  tags=['meat', 'stg']) }}
 
 /* 
     How the international meat price changed over the years

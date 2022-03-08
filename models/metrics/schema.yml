@@ -1,0 +1,27 @@
+version: 2
+
+models:
+
+  - name: monthly_meat_prices
+    columns:
+      - name: year
+        tests:
+          - not_null
+      - name: max_price
+        tests:
+          - not_null
+      - name: average_price
+        tests:
+          - not_null
+
+  - name: monthly_rice_prices
+    columns:
+      - name: year
+        tests:
+          - not_null
+      - name: max_price
+        tests:
+          - not_null
+      - name: average_price
+        tests:
+          - not_null
