@@ -1,10 +1,25 @@
+- [DBT_PLAYGROUND](#dbt_playground)
+  - [DBT Initial Setup](#dbt-initial-setup)
+    - [1. Instalallation on MAC](#1-instalallation-on-mac)
+    - [2. Create DBT Project](#2-create-dbt-project)
+    - [3. Test DBT initial configuration](#3-test-dbt-initial-configuration)
+      - [3.1. How to Test Connections](#31-how-to-test-connections)
+      - [3.2. How to run/deploy the models](#32-how-to-rundeploy-the-models)
+      - [3.3. How to Investigate logs](#33-how-to-investigate-logs)
+  - [Snowflake Initial Setup](#snowflake-initial-setup)
+    - [1. Create new Data Warehouse](#1-create-new-data-warehouse)
+    - [2. Create user to perform the transformations](#2-create-user-to-perform-the-transformations)
+    - [3. Create role and grant access](#3-create-role-and-grant-access)
+    - [4. Create database and grant priveleges](#4-create-database-and-grant-priveleges)
+  - [DBT Cloud](#dbt-cloud)
+    - [Types of materialization](#types-of-materialization)
+    - [Project Structure](#project-structure)
+    - [Cloud Development](#cloud-development)
+    - [Run job on Prod](#run-job-on-prod)
+
 # DBT_PLAYGROUND
 
-
-
 ## DBT Initial Setup
-
-
 
 ### 1. Instalallation on MAC
 
@@ -338,5 +353,3 @@ And grant access to the previous created user (as well for ourselves) to this ne
 4. Result:
 
 ![image-20220309113931410](docs/images/image-20220309113931410.png)
-
-#### 
