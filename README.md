@@ -17,7 +17,18 @@
     - [Cloud Development](#cloud-development)
     - [Run job on Prod](#run-job-on-prod)
 
+
 # DBT_PLAYGROUND
+
+- The purpose of this project is to learn DBT.
+- To do that, I createad a trial account in Snowflake and looked for data to play around.
+   - I used data from:
+     -  SNOWFLAKE_SAMPLE_DATA database - from Snowflake's sample database.
+        - models for this data are defined in models/example
+     -  AGRICULTURE_DATA_ATLAS database - from SNowflake's market place.
+        - models for this data are defined in models/staging and and models/metrics
+        - it fetches monthly _meat_ and _rice_ prices changes over the year into staging area and then, generates two simple fact tables.
+- I also created a trial account in DBT Cloud to be create jobs and play around there.
 
 ## DBT Initial Setup
 
