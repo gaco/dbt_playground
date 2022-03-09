@@ -2,6 +2,7 @@
 
 SELECT  
     year(date) as year,
+    ROUND(MIN(price), 2) min_price,
     ROUND(MAX(price), 2) max_price, 
     ROUND(AVG(price), 2) average_price
 FROM {{ ref('stg_rice_prices') }}
