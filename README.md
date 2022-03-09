@@ -1,5 +1,3 @@
-[TOC]
-
 # DBT_PLAYGROUND
 
 
