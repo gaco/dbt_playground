@@ -4,7 +4,7 @@
 
 
 
-### 1. Instalallation on MAC:
+### 1. Instalallation on MAC
 
 ```shell
 brew update
@@ -44,7 +44,7 @@ password (dev password):
 role (dev role): transform_role
 warehouse (warehouse name): transform_wh
 database (default database that dbt will build objects in): analytics
-schema (default schema that dbt will build objects in): dbt
+schema (default schema that dbt will build objects in): dbt_gabriel
 threads (1 or more) [1]: 
 14:59:11  Profile dbt_playground written to /Users/gabriel/.dbt/profiles.yml using target's profile_template.yml and your supplied values. Run 'dbt debug' to validate the connection.
 14:59:11  
@@ -78,13 +78,15 @@ dbt_playground:
       database: analytics
       password: ********
       role: transform_role
-      schema: dbt
+      schema: dbt_gabriel
       threads: 1
       type: snowflake
       user: transform_user
       warehouse: transform_wh
   target: dev
 ```
+
+> According to DBT best practices, schema should be: dbt_<username>
 
 - And a new directory called dbt-playground should have a structure like below:
 
@@ -94,7 +96,9 @@ dbt_playground:
 
 ### 3. Test DBT initial configuration
 
-1. Run `dbt debug` to check if dbt is able to connect to the database:
+#### 3.1. How to Test Connections
+
+- Run `dbt debug` to check if dbt is able to connect to the database:
 
 ```yaml
 gabriel@Gabriels-Air dbt_playground % dbt debug
@@ -127,7 +131,9 @@ All checks passed!
 gabriel@Gabriels-Air dbt_playground % 
 ```
 
-2. Run `dbt run`to run SQLs against our Snowflake database:
+#### 3.2. How to run/deploy the models
+
+- Run `dbt run`to run SQLs against our Snowflake database:
 
 > **dbt run** executes compiled sql model files against the current `target` database. dbt connects to the target database and runs the relevant SQL required to materialize all data models using the specified materialization strategies.
 >
@@ -147,15 +153,19 @@ gabriel@Gabriels-Air dbt_playground %
 
 - We can see that it failed due to grant previleges.
 
+#### 3.3. How to Investigate logs
+
 - To check the SQL statements that were executed. We can see the logs in `logs/dbt.log`:
 
   ![image-20220307131629784](images/image-20220307131629784.png)
 
-- We can see the query executed on line 19 that ended sucessfuly (see line 22) as well as the create schema statement on line 28 that failed with the snowflake query id shown on line 31. We can see this query id on snowflake as well:
+  
+
+  - We can see the query executed on line 19 that ended sucessfuly (see line 22) as well as the create schema statement on line 28 that failed with the snowflake query id shown on line 31. We can see this query id on snowflake as well:
 
 ![image-20220307131908814](images/image-20220307131908814.png)
 
-3. Fix that by granting the needed permissions and try again:
+- Fix that by granting the needed permissions and try again:
 
 ```sql
 -- DDL grants
@@ -197,6 +207,8 @@ gabriel@Gabriels-Air dbt_playground %
 
 ![image-20220307140637867](images/image-20220307140637867.png)
 
+
+
 ## Snowflake Initial Setup
 
 ### 1. Create new Data Warehouse
@@ -221,28 +233,108 @@ ALTER WAREHOUSE "TRANSFORM_WH" SET WAREHOUSE_SIZE = 'XSMALL' AUTO_SUSPEND = 60 A
 
 ### 3. Create role and grant access
 
+- **transform_role**: this role will be used by transform_user, which will be used by DBT.
+
 ![image-20220307113938305](images/image-20220307113938305.png)
 
 And grant access to the previous created user (as well for ourselves) to this new role:
 
-![image-20220307115500979](images/image-20220307115500979.png)
+![image-20220307115500979](images/image-20220307115500979.png)	
+
+   - **analytics**: this role is to be conceded to analytics users in general:
+
+![image-20220308161251729](images/image-20220308161251729.png)
+
+
 
 ### 4. Create database and grant priveleges
 
+1. Create **Analytics** database:
+
 ![image-20220307114447179](images/image-20220307114447179.png)
 
-```sql
--- DDL grants
-grant create schema on database analytics to role transform_role;
--- Usage grants
-grant usage on all schemas in database analytics to role transform_role;
-grant usage on future schemas in database analytics to role transform_role;
-grant usage on warehouse transform_wh to role transform_role;
-grant usage on database analytics to role transform_role;
--- Query grants
-grant select on all tables in database analytics to role transform_role;
-grant select on future tables in database analytics to role transform_role;
-grant select on all views in database analytics to role transform_role;
-grant select on future views in database analytics to role transform_role;
-```
+2. Grant privileges to role:
+   - **transform_role**: this role will be used by transform_user, which will be used by DBT:
+   
+     ```sql
+     -- DDL grants
+     grant create schema on database analytics to role transform_role;
+     -- Usage grants
+     grant usage on all schemas in database analytics to role transform_role;
+     grant usage on future schemas in database analytics to role transform_role;
+     grant usage on warehouse transform_wh to role transform_role;
+     grant usage on database analytics to role transform_role;
+     -- Query grants
+     grant select on all tables in database analytics to role transform_role;
+     grant select on future tables in database analytics to role transform_role;
+     grant select on all views in database analytics to role transform_role;
+     grant select on future views in database analytics to role transform_role;
+     ```
+   
+     
+   
+   - **analytics**: this role is to be conceded to analytics users in general:
+   
+     ```sql
+     grant usage on warehouse compute_wh to role analyst;
+     grant usage on database analytics to role analyst;
+     ```
 
+
+
+## DBT Cloud
+
+
+
+### Types of materialization
+
+
+
+| #               | VIEW                                                         | TABLE                                                        | INCREMENTAL                                                  | EPHMERAL                                                     |
+| --------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| **Description** | When using the `view` materialization, your model is rebuilt as a view on each run, via a `create view as` statement. | When using the `table` materialization, your model is rebuilt as a table on each run, via a `create table as` statement. | `incremental` models allow dbt to insert or update records into a table since the last time that dbt was run. | `ephemeral` models are not directly built into the database. Instead, dbt will interpolate the code from this model into dependent models as a common table expression. |
+| **Pros**        | No additional data is stored, views on top of source data will always have the latest records in them. | Tables are fast to query                                     | You can significantly reduce the build time by just transforming new records. | You can still write reusable logic.<br /><br />Ephemeral models can help keep your data warehouse clean by reducing clutter (also consider splitting your models across multiple schemas by [using custom schemas](https://docs.getdbt.com/docs/building-a-dbt-project/building-models/using-custom-schemas)). |
+| **Cons**        | Views that perform significant transformation, or are stacked on top of other views, are slow to query. | Tables can take a long time to rebuild, especially for complex transformations.<br /><br />New records in underlying source data are not automatically added to the table. | Incremental models require extra configuration and are an advanced usage of dbt.  Read more about using incremental models [here](https://docs.getdbt.com/docs/building-a-dbt-project/building-models/configuring-incremental-models). | You cannot select directly from this model.<br />Operations (e.g. macros called via `dbt run-operation` cannot `ref()` ephemeral nodes)<br /><br />Overuse of the ephemeral materialization can also make queries harder to debug. |
+| **Advice**      | Generally start with views for your models, and only change to another materialization when you're noticing performance problems. <br /><br />Views are best suited for models that do not do significant transformation, e.g. renaming, recasting columns. | Use the table materialization for any models being queried by BI tools, to give your end user a faster experience.<br /><br />Also use the table materialization for any slower transformations that are used by many downstream models. | Incremental models are best for event-style data.<br /><br />Use incremental models when your `dbt run`s are becoming too slow (i.e. don't start with incremental models). | Use the ephemeral materialization for:  <br /><br />    - very light-weight transformations that are early on in your DAG;<br />    - when only used in one or two downstream models;<br /><br />    - when do not need to be queried directly. |
+
+
+
+### Project Structure
+
+- This project has two staging entities and two aggregations that will be created from those two entities.
+- It also has a bunch of examples models that I did when learning
+
+![image-20220309113844314](images/image-20220309113844314.png)
+
+
+
+### Cloud Development
+
+- it is possible to develop on the dbt cloud:
+
+![image-20220309114550766](images/image-20220309114550766.png)
+
+
+
+### Run job on Prod
+
+1.  Create a prod environment
+
+![image-20220309103048437](images/image-20220309103048437.png)
+
+2. Create a new job:
+   - just for fun with **tags**, lets run only meat model
+
+![image-20220309103822826](images/image-20220309103822826.png)
+
+
+
+3. Run the job:
+
+![image-20220309111923828](images/image-20220309111923828.png)
+
+4. Result:
+
+![image-20220309113931410](images/image-20220309113931410.png)
+
+#### 
