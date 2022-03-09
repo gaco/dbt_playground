@@ -92,7 +92,7 @@ dbt_playground:
 
 - And a new directory called dbt-playground should have a structure like below:
 
-![image-20220307122444840](images/image-20220307122444840.png)
+![image-20220307122444840](docs/images/image-20220307122444840.png)
 
 
 
@@ -159,13 +159,13 @@ gabriel@Gabriels-Air dbt_playground %
 
 - To check the SQL statements that were executed. We can see the logs in `logs/dbt.log`:
 
-  ![image-20220307131629784](images/image-20220307131629784.png)
+  ![image-20220307131629784](docs/images/image-20220307131629784.png)
 
   
 
   - We can see the query executed on line 19 that ended sucessfuly (see line 22) as well as the create schema statement on line 28 that failed with the snowflake query id shown on line 31. We can see this query id on snowflake as well:
 
-![image-20220307131908814](images/image-20220307131908814.png)
+![image-20220307131908814](docs/images/image-20220307131908814.png)
 
 - Fix that by granting the needed permissions and try again:
 
@@ -207,7 +207,7 @@ gabriel@Gabriels-Air dbt_playground %
 
 - We should be able to see two models in snowflake created by DBT. One table and one view:
 
-![image-20220307140637867](images/image-20220307140637867.png)
+![image-20220307140637867](docs/images/image-20220307140637867.png)
 
 
 
@@ -215,7 +215,7 @@ gabriel@Gabriels-Air dbt_playground %
 
 ### 1. Create new Data Warehouse
 
-![image-20220307112422439](images/image-20220307112422439.png)
+![image-20220307112422439](docs/images/image-20220307112422439.png)
 
 Create Snowflake table:
 
@@ -231,21 +231,21 @@ ALTER WAREHOUSE "TRANSFORM_WH" SET WAREHOUSE_SIZE = 'XSMALL' AUTO_SUSPEND = 60 A
 
 ### 2. Create user to perform the transformations
 
-![image-20220307113716597](images/image-20220307113716597.png)
+![image-20220307113716597](docs/images/image-20220307113716597.png)
 
 ### 3. Create role and grant access
 
 - **transform_role**: this role will be used by transform_user, which will be used by DBT.
 
-![image-20220307113938305](images/image-20220307113938305.png)
+![image-20220307113938305](docs/images/image-20220307113938305.png)
 
 And grant access to the previous created user (as well for ourselves) to this new role:
 
-![image-20220307115500979](images/image-20220307115500979.png)	
+![image-20220307115500979](docs/images/image-20220307115500979.png)	
 
    - **analytics**: this role is to be conceded to analytics users in general:
 
-![image-20220308161251729](images/image-20220308161251729.png)
+![image-20220308161251729](docs/images/image-20220308161251729.png)
 
 
 
@@ -253,7 +253,7 @@ And grant access to the previous created user (as well for ourselves) to this ne
 
 1. Create **Analytics** database:
 
-![image-20220307114447179](images/image-20220307114447179.png)
+![image-20220307114447179](docs/images/image-20220307114447179.png)
 
 2. Grant privileges to role:
    - **transform_role**: this role will be used by transform_user, which will be used by DBT:
@@ -306,7 +306,7 @@ And grant access to the previous created user (as well for ourselves) to this ne
 - This project has two staging entities and two aggregations that will be created from those two entities.
 - It also has a bunch of examples models that I did when learning
 
-![image-20220309113844314](images/image-20220309113844314.png)
+![image-20220309113844314](docs/images/image-20220309113844314.png)
 
 
 
@@ -314,7 +314,7 @@ And grant access to the previous created user (as well for ourselves) to this ne
 
 - it is possible to develop on the dbt cloud:
 
-![image-20220309114550766](images/image-20220309114550766.png)
+![image-20220309114550766](docs/images/image-20220309114550766.png)
 
 
 
@@ -322,21 +322,21 @@ And grant access to the previous created user (as well for ourselves) to this ne
 
 1.  Create a prod environment
 
-![image-20220309103048437](images/image-20220309103048437.png)
+![image-20220309103048437](docs/images/image-20220309103048437.png)
 
 2. Create a new job:
    - just for fun with **tags**, lets run only meat model
 
-![image-20220309103822826](images/image-20220309103822826.png)
+![image-20220309103822826](docs/images/image-20220309103822826.png)
 
 
 
 3. Run the job:
 
-![image-20220309111923828](images/image-20220309111923828.png)
+![image-20220309111923828](docs/images/image-20220309111923828.png)
 
 4. Result:
 
-![image-20220309113931410](images/image-20220309113931410.png)
+![image-20220309113931410](docs/images/image-20220309113931410.png)
 
 #### 
