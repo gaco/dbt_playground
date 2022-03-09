@@ -1,4 +1,7 @@
+# DBT_PLAYGROUND
+
 - [DBT_PLAYGROUND](#dbt_playground)
+  - [Intro](#intro)
   - [DBT Initial Setup](#dbt-initial-setup)
     - [1. Instalallation on MAC](#1-instalallation-on-mac)
     - [2. Create DBT Project](#2-create-dbt-project)
@@ -16,9 +19,12 @@
     - [Project Structure](#project-structure)
     - [Cloud Development](#cloud-development)
     - [Run job on Prod](#run-job-on-prod)
+      - [On Demand Job](#on-demand-job)
+      - [CI/CD](#cicd)
 
+---
 
-# DBT_PLAYGROUND
+## Intro
 
 - The purpose of this project is to learn DBT.
 - To do that, I createad a trial account in Snowflake and looked for data to play around.
@@ -346,21 +352,40 @@ And grant access to the previous created user (as well for ourselves) to this ne
 
 ### Run job on Prod
 
-1.  Create a prod environment
+- Create a prod environment
 
 ![image-20220309103048437](docs/images/image-20220309103048437.png)
 
-2. Create a new job:
-   - just for fun with **tags**, lets run only meat model
+#### On Demand Job
+
+1. Create a new job:
+
+- just for fun with **tags**, lets run only meat model
 
 ![image-20220309103822826](docs/images/image-20220309103822826.png)
 
-
-
-3. Run the job:
+2. Run the job:
 
 ![image-20220309111923828](docs/images/image-20220309111923828.png)
 
-4. Result:
+3. See Results:
 
 ![image-20220309113931410](docs/images/image-20220309113931410.png)
+
+#### CI/CD
+
+1. Create a new job and set webhook:
+
+   ![image-20220309154623198](docs/images/image-20220309154623198.png)
+
+2. Do some pull request:
+
+   ![image-20220309154741850](docs/images/image-20220309154741850.png)
+
+3. See the magic happen, as the build starts automatically:
+
+![image-20220309154823959](docs/images/image-20220309154823959.png)
+
+![image-20220309154840139](docs/images/image-20220309154840139.png)
+
+![image-20220309162127587](docs/images/image-20220309162127587.png)
