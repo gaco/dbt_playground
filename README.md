@@ -195,7 +195,7 @@ gabriel@Gabriels-Air dbt_playground %
 
   
 
-  - We can see the query executed on line 19 that ended sucessfuly (see line 22) as well as the create schema statement on line 28 that failed with the snowflake query id shown on line 31. We can see this query id on snowflake as well:
+  - We can see the query executed on line 19, that ended sucessfuly (see line 22) as well as the create schema statement on line 28, that failed with the snowflake query id shown on line 31. We can see this query id on snowflake as well:
 
 ![image-20220307131908814](docs/images/image-20220307131908814.png)
 
@@ -336,7 +336,7 @@ And grant access to the previous created user (as well for ourselves) to this ne
 ### Project Structure
 
 - This project has two staging entities and two aggregations that will be created from those two entities.
-- It also has a bunch of examples models that I did when learning
+- It also has a bunch of examples models that I did while learning
 
 ![image-20220309113844314](docs/images/image-20220309113844314.png)
 
